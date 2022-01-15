@@ -9,8 +9,13 @@ import {
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import DatePicker from "react-native-date-picker";
 import {LocalizationContext} from "./Translations";
+import database from "@react-native-firebase/database";
+import {format, parseISO} from 'date-fns'
+import {sk, enUS} from "date-fns/esm/locale";
+import {getCurrentTimestamp} from "react-native/Libraries/Utilities/createPerformanceLogger";
+import firestore from "@react-native-firebase/firestore";
 
-const AddItem = ({navigation, addItem}) => {
+const AddTask = ({navigation}) => {
     const {translations, initializeAppLanguage} = useContext(LocalizationContext);
     initializeAppLanguage();
 
@@ -26,8 +31,17 @@ const AddItem = ({navigation, addItem}) => {
         return date !== '';
     }
 
+    const getLocale = () => {
+        return translations.getLanguage() === 'en' ? enUS : sk
+    };
+
+    const getFormat = () => {
+       return translations.getLanguage() === 'en' ? 'EEE MMM d HH:mm yyyy' : 'EEE d. M. HH:mm yyyy'
+    };
+
     return (
         <View>
+            {console.log(dateEnd)}
             <Text style={styles.title}>{translations['addTaskTextTitle']}</Text>
             <TextInput
                 placeholder={translations['addTaskTextPlaceholder']}
@@ -47,7 +61,7 @@ const AddItem = ({navigation, addItem}) => {
             <View style={styles.listItemView}>
                 <TouchableOpacity onPress={() => setOpen(true)} >
                     <TextInput style={styles.input} editable={false}>
-                        {checkDate(dateEnd) ? dateEnd.toLocaleString() : 'Select a date'}
+                        {checkDate(dateEnd) ? format(dateEnd, getFormat(), {locale: getLocale()}) : 'Select a date'}
                     </TextInput>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setOpen(true)} >
@@ -56,12 +70,18 @@ const AddItem = ({navigation, addItem}) => {
             </View>
             {/*</TouchableOpacity>*/}
             <DatePicker
+                androidVariant="nativeAndroid"
+                title={translations['addTaskDatepickerTitle']}
+                confirmText={translations['addTaskDatepickerConfirmText']}
+                cancelText={translations['addTaskDatepickerCancelText']}
                 modal
+                locale={translations.getLanguage()}
                 open={open}
                 date={dateEnd}
                 onConfirm={(dateEnd) => {
                     setOpen(false)
                     setDateEnd(dateEnd)
+                    // console.log(dateEnd)
                 }}
                 onCancel={() => {
                     setOpen(false)
@@ -82,7 +102,25 @@ const AddItem = ({navigation, addItem}) => {
                         alert('Please enter a title');
                         return;
                     }
-                    addItem(text, dateAdded.toLocaleString(), dateEnd.toLocaleString(), details);
+                    // addItem(text, dateAdded, dateEnd, details);
+                    // database().ref('/tasks').push({
+                    //     completed: false,
+                    //     text: text,
+                    //     dateAdded: dateAdded.getTime(),
+                    //     dateEnd: dateEnd.getTime(),
+                    //     details: details,
+                    // });
+                    firestore()
+                        .collection('Tasks')
+                        .add({
+                            completed: false,
+                            text: text,
+                            dateAdded: dateAdded,
+                            dateEnd: dateEnd,
+                            details: details,
+                        }).then((ref) => {
+                        console.log('Task added!', ref.id);
+                    });
                     setText('');
                     setDateEnd('');
                     navigation.goBack();
@@ -130,4 +168,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AddItem;
+export default AddTask;

@@ -2,20 +2,22 @@ import React, {useContext, useState} from "react";
 import {Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/dist/FontAwesome";
 import {LocalizationContext} from "../components/Translations";
+import {format, fromUnixTime} from "date-fns";
+import {enUS, sk} from "date-fns/esm/locale";
 
 
 export function TaskDetailsScreen({ navigation, route }) {
     const {translations, initializeAppLanguage} = useContext(LocalizationContext);
     initializeAppLanguage();
 
-    const { item, deleteItem, update } = route.params;
+    const { item, deleteItem, switchCompleted, update } = route.params;
 
     const [isCompleted, setIsCompleted] = useState(item.completed);
 
     const viewCompleted = () => {
         return(
             <View style={{flexDirection: "row", justifyContent: "space-around", marginHorizontal: 30, marginVertical: 18}}>
-                <TouchableOpacity style={styles.buttonDetailBottom} onPress={() => {setIsCompleted(false); item.completed = false; update()}}>
+                <TouchableOpacity style={styles.buttonDetailBottom} onPress={() => {setIsCompleted(false); switchCompleted(item)}}>
                     <Icon name="times" size={50} color='#db4412'/>
                     <Text style={styles.buttonText}>{translations['detailsButtonUncomplete']}</Text>
                 </TouchableOpacity>
@@ -30,7 +32,7 @@ export function TaskDetailsScreen({ navigation, route }) {
                     <Icon name="edit" size={50} color='blue'/>
                     <Text style={styles.buttonText}>{translations['detailsButtonEdit']}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonDetailBottom} onPress={() => {setIsCompleted(true); item.completed = true; update()}}>
+                <TouchableOpacity style={styles.buttonDetailBottom} onPress={() => {setIsCompleted(true); switchCompleted(item)}}>
                     <Icon name="check" size={50} color='green'/>
                     <Text style={styles.buttonText}>{translations['detailsButtonComplete']}</Text>
                 </TouchableOpacity>
@@ -53,7 +55,8 @@ export function TaskDetailsScreen({ navigation, route }) {
             ],
             {
                 cancelable: true,
-            })
+            }
+        )
     }
 
     React.useLayoutEffect(() => {
@@ -68,6 +71,14 @@ export function TaskDetailsScreen({ navigation, route }) {
             ),
         });
     }, [navigation]);
+
+    const getLocale = () => {
+        return translations.getLanguage() === 'en' ? enUS : sk
+    };
+
+    const getFormat = () => {
+        return translations.getLanguage() === 'en' ? 'EEE MMM d HH:mm yyyy' : 'EEE d. M. HH:mm yyyy'
+    };
 
     return(
         // <View style={styles.container}>
@@ -86,11 +97,11 @@ export function TaskDetailsScreen({ navigation, route }) {
             </View>
             <View style={styles.detail}>
                 <Text style={styles.detailsTextTitle}>{translations['detailsDateAdded']}</Text>
-                <Text style={styles.detailsText}>{item.dateAdded}</Text>
+                <Text style={styles.detailsText}>{format(fromUnixTime(item.dateAdded), getFormat(), {locale: getLocale()})}</Text>
             </View>
             <View style={styles.detail}>
                 <Text style={styles.detailsTextTitle}>{translations['detailsDateEnd']}</Text>
-                <Text style={styles.detailsText}>{item.dateEnd}</Text>
+                <Text style={styles.detailsText}>{format(fromUnixTime(item.dateEnd), getFormat(), {locale: getLocale()})}</Text>
             </View>
             <View style={styles.detail}>
                 <Text style={styles.detailsTextTitle}>{translations['detailsImage']}</Text>
@@ -104,6 +115,10 @@ export function TaskDetailsScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+    },
     buttonDetailBottom: {
         alignItems: "center",
         justifyContent: "center",
@@ -129,7 +144,7 @@ const styles = StyleSheet.create({
     },
     detail: {
         marginHorizontal: 30,
-        marginVertical: 18,
+        marginVertical: 14,
         paddingBottom: 0,
     },
     detailsTextTitle: {
@@ -151,10 +166,6 @@ const styles = StyleSheet.create({
         color: '#db4412',
         marginTop:10,
         marginLeft: 15,
-    },
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
     },
 
 });

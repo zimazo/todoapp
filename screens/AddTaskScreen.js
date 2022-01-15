@@ -1,9 +1,9 @@
-import AddItem from "../components/AddItem";
+import AddTask from "../components/AddTask";
 import React from "react";
 
-export function AddTaskScreen({ navigation, route }) {
-    const { addItem} = route.params;
+export function AddTaskScreen({ navigation }) {
+    // const { addItem} = route.params;
     return(
-        <AddItem addItem={addItem} navigation={navigation}/>
+        <AddTask navigation={navigation}/>
     )
 }

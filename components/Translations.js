@@ -4,6 +4,7 @@ import LocalizedStrings from 'react-native-localization'; // 2
 import * as RNLocalize from 'react-native-localize'; // 3
 import en from '../localization/en.json';
 import sk from '../localization/sk.json';
+import {enUS} from "date-fns/esm/locale";
 const DEFAULT_LANGUAGE = 'en';
 const APP_LANGUAGE = 'appLanguage';
 const languages = {en, sk};
@@ -24,6 +25,17 @@ export const LocalizationContext = createContext({ // 5
     appLanguage: DEFAULT_LANGUAGE, // 7
     initializeAppLanguage: () => {}, // 8
 });
+
+export const getLocale = async () => {
+    const currentLanguage = await AsyncStorage.getItem(APP_LANGUAGE);
+    return currentLanguage === 'en' ? enUS : sk
+};
+
+export const getFormat = async () => {
+    const currentLanguage = await AsyncStorage.getItem(APP_LANGUAGE);
+    return currentLanguage === 'en' ? 'EEE MMM d HH:mm yyyy' : 'EEE d. M. HH:mm yyyy'
+};
+
 export const LocalizationProvider = ({children}) => { // 9
     const [appLanguage, setAppLanguage] = useState(DEFAULT_LANGUAGE);
     // 11
