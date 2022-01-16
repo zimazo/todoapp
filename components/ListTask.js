@@ -9,10 +9,13 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {LocalizationContext} from "./Translations";
 import {enUS, sk} from "date-fns/esm/locale";
 import {format, fromUnixTime} from "date-fns";
+import {useTheme} from '../theme/ThemeProvider';
 
 const ListTask = ({item, deleteItem, switchCompleted, showCompleted, update, navigation}) => {
     const {translations, initializeAppLanguage} = useContext(LocalizationContext);
     initializeAppLanguage();
+
+    const {colors, isDark} = useTheme();
 
     const getLocale = () => {
         return translations.getLanguage() === 'en' ? enUS : sk
@@ -27,31 +30,31 @@ const ListTask = ({item, deleteItem, switchCompleted, showCompleted, update, nav
         //     id: item.id
         // })}>
         <View style={styles.container}>
-            <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('Details', {
+            <TouchableOpacity style={[styles.listItem, {borderColor: colors.divider}]} onPress={() => navigation.navigate('Details', {
                 item: item,
                 deleteItem: deleteItem,
                 switchCompleted: switchCompleted,
                 update: update,
             })}>
                 <View>
-                    <View style={{backgroundColor: 'white'}}>
+                    <View>
                         <View style={styles.listItemViewRow}>
-                            <Text style={styles.listItemText}>{item.text}</Text>
+                            <Text style={[styles.listItemText, {color: colors.text}]}>{item.text}</Text>
                             {/*{showCompleted ? <Icon name ="remove" size ={20} color="red" onPress={() => deleteItem(item.id)}/> : <Icon name ="check" size ={20} color="#119ff7" onPress={() => markAsDone(item)}/>}*/}
                             {/*<Icon name ="remove" size ={20} color="red" onPress={() => deleteItem(item.id)}/>*/}
                             {/*<Icon name ="check" size ={20} color="blue" onPress={() => markAsDone(item)}/>*/}
                         </View>
                         <View style={styles.listItemView}>
                             {/*<Text style={styles.listItemDate}>Added: {item.dateAdded}</Text>*/}
-                            {/*<Text style={styles.listItemDate}>{translations['listTaskDateEnd']} {format(item.dateEnd, 'EEE MMM d HH:mm yyyy')}</Text>*/}
-                            <Text style={styles.listItemDate}>{translations['listTaskDateEnd']} {format(fromUnixTime(item.dateEnd), getFormat(), {locale: getLocale()})}</Text>
+                            <Text style={styles.listItemDate}>{translations['listTaskDateEnd']} {format(item.dateEnd.toDate(),getFormat(), {locale: getLocale()})}</Text>
+                            {/*<Text style={styles.listItemDate}>{translations['listTaskDateEnd']} {format(fromUnixTime(item.dateEnd.toDate), getFormat(), {locale: getLocale()})}</Text>*/}
                         </View>
                     </View>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => switchCompleted(item)}>
-                <View style={{flex:3, backgroundColor: 'white', justifyContent:"center", alignItems:"center", borderBottomWidth:1, borderColor: '#b6b6b6',}}>
-                        <View style={{paddingVertical:10, paddingHorizontal:13, borderLeftWidth:1, borderColor: '#b6b6b6'}}>
+                <View style={{flex:3, justifyContent:"center", alignItems:"center", borderBottomWidth:1, borderColor: colors.divider,}}>
+                        <View style={{paddingVertical:10, paddingHorizontal:13, borderLeftWidth:1, borderColor: colors.divider}}>
                             {showCompleted ? <Icon name ="remove" size ={25} color="red" onPress={() => deleteItem(item.id)}/> : <Icon name ="check" size ={25} color="#119ff7" />}
                         </View>
                 </View>

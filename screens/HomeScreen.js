@@ -4,62 +4,17 @@ import {ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity, 
 import Icon from "react-native-vector-icons/dist/FontAwesome";
 import firestore from "@react-native-firebase/firestore";
 import ListTask from "../components/ListTask";
+import {useTheme} from "../theme/ThemeProvider";
 
 export function HomeScreen({ navigation }) {
     const {translations, initializeAppLanguage} = useContext(LocalizationContext);
     initializeAppLanguage();
 
-    // const [items, setItems] = useState([
-    //     {
-    //         id: uuid.v4(),
-    //         completed: false,
-    //         text: 'Clean the house',
-    //         dateAdded: new Date().toLocaleString(),
-    //         dateEnd: new Date().toLocaleString(),
-    //         details: 'I really should do some cleaning around here',
-    //         image: null
-    //     },
-    //     {
-    //         id: uuid.v4(),
-    //         completed: false,
-    //         text: 'Wash the dishes',
-    //         dateAdded: new Date().toLocaleString(),
-    //         dateEnd: new Date().toLocaleString(),
-    //         details: 'They have been piling up for a week now',
-    //         image: null
-    //     },
-    //     {
-    //         id: uuid.v4(),
-    //         completed: false,
-    //         text: 'Bake cookies',
-    //         dateAdded: new Date().toLocaleString(),
-    //         dateEnd: new Date().toLocaleString(),
-    //         details: 'I love cookies',
-    //         image: null
-    //     },
-    //     {
-    //         id: uuid.v4(),
-    //         completed: false,
-    //         text: 'Play videogames',
-    //         dateAdded: new Date().toLocaleString(),
-    //         dateEnd: new Date().toLocaleString(),
-    //         details: 'Time to chill',
-    //         image: null
-    //     },
-    //     {
-    //         id: uuid.v4(),
-    //         completed: true,
-    //         text: 'Watch Tv',
-    //         dateAdded: new Date().toLocaleString(),
-    //         dateEnd: new Date().toLocaleString(),
-    //         details: '',
-    //         image: null
-    //     },
-    // ]);
+    const {colors, isDark} = useTheme();
+
     const [items, setItems] = useState([]);
     const [showCompleted, setShowCompleted] = useState(true);
     const [refresh, setRefresh] = useState(true);
-    // let showCompleted = false
 
     const update = () => {
         setRefresh(!refresh)
@@ -201,7 +156,7 @@ export function HomeScreen({ navigation }) {
     }
 
     return(
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: colors.background}]}>
             <View style={{flex: 12}}>
                 {/*<Users/>*/}
                 <FlatList
@@ -237,16 +192,16 @@ export function HomeScreen({ navigation }) {
                 </View>
             </View>
             <View style={{flex: 1, flexDirection: "row", justifyContent: "space-evenly"}}>
-                <TouchableOpacity style={showCompleted ? styles.buttonHomeBottom : styles.buttonHomeBottomSelected} onPress={() => {console.log('before set: ' + refresh); setShowCompleted(false); update(); setItems(items) ; console.log('after set: ' + refresh);}}>
+                <TouchableOpacity style={showCompleted ? [styles.buttonHomeBottom, {backgroundColor: colors.background}] : styles.buttonHomeBottomSelected} onPress={() => {console.log('before set: ' + refresh); setShowCompleted(false); update(); setItems(items) ; console.log('after set: ' + refresh);}}>
                     <View style={{justifyContent: 'space-between', alignItems: 'center', padding: 7, marginRight:10}}>
-                        <Icon name="list" size={25} color={showCompleted ? 'black' : 'white'}/>
-                        <Text style={showCompleted ? styles.buttonText : styles.buttonTextSelected}>{translations['toDo']}</Text>
+                        <Icon name="list" size={25} color={showCompleted ? '#ffffff' : (isDark ? '#ffffff' : '#1c1b1b')}/>
+                        <Text style={showCompleted ? [styles.buttonText, {color: colors.text}] : styles.buttonTextSelected}>{translations['toDo']}</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={showCompleted ? styles.buttonHomeBottomSelected : styles.buttonHomeBottom} onPress={() => {console.log('before set: ' + refresh); setShowCompleted(true); update(); setItems(items) ; console.log('after set: ' + refresh);}}>
+                <TouchableOpacity style={showCompleted ? styles.buttonHomeBottomSelected : [styles.buttonHomeBottom, {backgroundColor: colors.background}]} onPress={() => {console.log('before set: ' + refresh); setShowCompleted(true); update(); setItems(items) ; console.log('after set: ' + refresh);}}>
                     <View style={{justifyContent: 'space-between', alignItems: 'center', padding: 7, marginRight:10}}>
-                        <Icon name="check" size={25} color={showCompleted ? 'white' : 'black'}/>
-                        <Text style={showCompleted ? styles.buttonTextSelected : styles.buttonText}>{translations['completed']}</Text>
+                        <Icon name="check" size={25} color={showCompleted ? '#ffffff' : (isDark ? '#ffffff' : '#1c1b1b')}/>
+                        <Text style={showCompleted ? [styles.buttonText, {color: colors.text}] : styles.buttonTextSelected}>{translations['completed']}</Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -258,6 +213,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#ffffff',
+    },
+    containerLight: {
+        flex: 1,
+        backgroundColor: '#ffffff',
+    },
+    containerDark: {
+        flex: 1,
+        backgroundColor: '#1c1b1b',
     },
     buttonHomeBottom: {
         alignItems: "center",
@@ -337,6 +300,133 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         color: 'black'
+    },
+    settingText: {
+        fontSize: 12,
+    },
+    // listItem: {
+    //     // padding: 15,
+    //     backgroundColor: '#ffffff',
+    //     borderColor: '#b6b6b6',
+    //     // borderWidth: 2,
+    //     // borderRadius: 4,
+    //     // marginVertical: 3,
+    //     // marginHorizontal: 12,
+    //     borderBottomWidth:1.2,
+    // },
+    btn: {
+        backgroundColor: '#119ff7',
+        marginBottom: 20,
+        borderRadius: 100,
+        // borderWidth:1,
+        // borderColor:"blue",
+        width: 70,
+        height: 70,
+        // alignSelf: "center",
+        // justifyContent: "center",
+        // position: "absolute",
+        alignItems: 'center',
+        justifyContent: 'center',
+        top:0,
+        bottom: 0,
+        right: 0,
+        left:0,
+
+        // shadowColor: "#000",
+        // shadowOffset: {
+        //     width: 0,
+        //     height: 4,
+        // },
+        // shadowOpacity: 0.32,
+        // shadowRadius: 5.46,
+        //
+        elevation: 1,
+    },
+});
+
+const stylesd = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#2b2b2b',
+    },
+    buttonHomeBottom: {
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: '#2b2b2b',
+        // borderRadius: 8,
+        // borderWidth: 2,
+        width: '50%',
+    },
+    buttonHomeBottomSelected: {
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#119ff7",
+        // borderRadius: 8,
+        // borderWidth: 2,
+        width: '50%',
+    },
+    buttonDetailBottom: {
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: '#2b2b2b',
+        borderRadius: 8,
+        borderWidth: 2,
+        width: 150,
+    },
+    buttonText: {
+        color: '#ffffff',
+    },
+    buttonTextSelected: {
+        color: 'white',
+    },
+    image: {
+        marginTop:10,
+        marginLeft: 14,
+        // aspectRatio: 16/9,
+        // maxWidth: 307.2,
+        // maxHeight: 172.8,
+        width: 307.2,
+        height: 172.8,
+        // backgroundColor: 'green',
+        // marginBottom: -100,
+
+    },
+    detail: {
+        marginHorizontal: 30,
+        marginVertical: 18,
+        paddingBottom: 0,
+    },
+    detailsTextTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color:'#ffffff'
+    },
+    detailsText: {
+        color: '#ffffff',
+        marginTop:10,
+        marginLeft: 15,
+    },
+    detailsIsCompletedText: {
+        color: 'green',
+        marginTop:10,
+        marginLeft: 15,
+    },
+    detailsIsNotCompletedText: {
+        color: '#db4412',
+        marginTop:10,
+        marginLeft: 15,
+    },
+    setting: {
+        margin: 30
+    },
+    settingItems: {
+        justifyContent: 'space-between',
+        flexDirection: "row",
+    },
+    settingTextTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: '#ffffff'
     },
     settingText: {
         fontSize: 12,

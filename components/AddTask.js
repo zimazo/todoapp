@@ -14,10 +14,13 @@ import {format, parseISO} from 'date-fns'
 import {sk, enUS} from "date-fns/esm/locale";
 import {getCurrentTimestamp} from "react-native/Libraries/Utilities/createPerformanceLogger";
 import firestore from "@react-native-firebase/firestore";
+import {useTheme} from "../theme/ThemeProvider";
 
 const AddTask = ({navigation}) => {
     const {translations, initializeAppLanguage} = useContext(LocalizationContext);
     initializeAppLanguage();
+
+    const {colors, isDark} = useTheme();
 
     const [text, setText] = useState('');
     const dateAdded = new Date()
@@ -40,11 +43,12 @@ const AddTask = ({navigation}) => {
     };
 
     return (
-        <View>
+        <View style={{flex:1, backgroundColor: colors.background}}>
             {console.log(dateEnd)}
-            <Text style={styles.title}>{translations['addTaskTextTitle']}</Text>
+            <Text style={[styles.title, {color: colors.text}]}>{translations['addTaskTextTitle']}</Text>
             <TextInput
                 placeholder={translations['addTaskTextPlaceholder']}
+                placeholderTextColor={colors.textInput}
                 maxLength={28}
                 style={styles.input}
                 onChangeText={onChangeText}
@@ -57,7 +61,7 @@ const AddTask = ({navigation}) => {
             {/*    value={date}*/}
             {/*/>*/}
             {/*<TouchableOpacity onPress={() => setOpen(true)} >*/}
-            <Text style={styles.title}>{translations['addTaskDateDueTitle']}</Text>
+            <Text style={[styles.title, {color: colors.text}]}>{translations['addTaskDateDueTitle']}</Text>
             <View style={styles.listItemView}>
                 <TouchableOpacity onPress={() => setOpen(true)} >
                     <TextInput style={styles.input} editable={false}>
@@ -87,10 +91,11 @@ const AddTask = ({navigation}) => {
                     setOpen(false)
                 }}
             />
-            <Text style={styles.title}>{translations['addTaskDetailTitle']}</Text>
+            <Text style={[styles.title, {color: colors.text}]}>{translations['addTaskDetailTitle']}</Text>
             <TextInput
                 placeholder={translations['addTaskDetailPlaceholder']}
                 maxLength={80}
+                placeholderTextColor={colors.textInput}
                 style={styles.input}
                 onChangeText={onChangeDetails}
                 value={details}
@@ -146,15 +151,15 @@ const styles = StyleSheet.create({
         padding: 8,
         margin: 5,
         // backgroundColor: 'blue'
-        color: 'black'
+        color: '#119ff7'
     },
     btn: {
-        backgroundColor: 'white',
+        backgroundColor: '#119ff7',
         padding: 9,
         margin: 5,
     },
     btnText: {
-        color: '#119ff7',
+        color: '#ffffff',
         fontSize: 20,
         textAlign: 'center',
     },

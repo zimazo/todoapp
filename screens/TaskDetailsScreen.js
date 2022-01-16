@@ -97,11 +97,11 @@ export function TaskDetailsScreen({ navigation, route }) {
             </View>
             <View style={styles.detail}>
                 <Text style={styles.detailsTextTitle}>{translations['detailsDateAdded']}</Text>
-                <Text style={styles.detailsText}>{format(fromUnixTime(item.dateAdded), getFormat(), {locale: getLocale()})}</Text>
+                <Text style={styles.detailsText}>{format(item.dateAdded.toDate(),getFormat(), {locale: getLocale()})}</Text>
             </View>
             <View style={styles.detail}>
                 <Text style={styles.detailsTextTitle}>{translations['detailsDateEnd']}</Text>
-                <Text style={styles.detailsText}>{format(fromUnixTime(item.dateEnd), getFormat(), {locale: getLocale()})}</Text>
+                <Text style={styles.detailsText}>{format(item.dateEnd.toDate(),getFormat(), {locale: getLocale()})}</Text>
             </View>
             <View style={styles.detail}>
                 <Text style={styles.detailsTextTitle}>{translations['detailsImage']}</Text>

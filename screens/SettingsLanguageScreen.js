@@ -3,6 +3,7 @@ import {LocalizationContext} from "../components/Translations";
 import {View} from "react-native";
 import {Divider, ListItem} from "react-native-elements";
 import Icon from "react-native-vector-icons/dist/FontAwesome";
+import {useTheme} from "../theme/ThemeProvider";
 
 export function SettingsLanguageScreen() {
     const {
@@ -13,12 +14,14 @@ export function SettingsLanguageScreen() {
     } = useContext(LocalizationContext); // 1
     initializeAppLanguage(); // 2
 
+    const {colors, isDark} = useTheme();
+
     return(
-        <View>
+        <View style={{flex: 1, backgroundColor: colors.background}}>
             {translations.getAvailableLanguages().map((currentLang, i) => (
-                <ListItem key={i} bottomDivider onPress={() => {setAppLanguage(currentLang);}}>
+                <ListItem containerStyle={{backgroundColor: colors.background}} key={i} bottomDivider onPress={() => {setAppLanguage(currentLang);}}>
                     <ListItem.Content>
-                        <ListItem.Title>{currentLang === 'en' ? translations['languageEnglish'] : translations['languageSlovak']}</ListItem.Title>
+                        <ListItem.Title style={{ color: colors.text, fontWeight: 'bold' }}>{currentLang === 'en' ? translations['languageEnglish'] : translations['languageSlovak']}</ListItem.Title>
                         {/*<ListItem.CheckBox>{appLanguage === currentLang}</ListItem.CheckBox>*/}
                         {/*<View style={{justifyContent: "space-around", alignItems: "center", flexDirection: "row"}}>*/}
                         {/*    <ListItem.Title>{currentLang}</ListItem.Title>*/}

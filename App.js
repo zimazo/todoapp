@@ -1,15 +1,16 @@
 import React, {useContext} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {NavigationContainer} from "@react-navigation/native";
-import {LocalizationContext, LocalizationProvider} from "./components/Translations";
+import {DarkTheme, DefaultTheme, NavigationContainer} from "@react-navigation/native";
+import { AppearanceProvider, useColorScheme } from "react-native-appearance";
 
+import {LocalizationContext, LocalizationProvider} from "./components/Translations";
 import {AddTaskScreen} from "./screens/AddTaskScreen";
 import {TaskDetailsScreen} from "./screens/TaskDetailsScreen";
 import {SettingsScreen} from "./screens/SettingsScreen";
 import {SettingsLanguageScreen} from "./screens/SettingsLanguageScreen";
 import {HomeScreen} from "./screens/HomeScreen";
-
+import {ThemeProvider} from './theme/ThemeProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,73 +18,79 @@ const App = () => {
     const {translations, initializeAppLanguage} = useContext(LocalizationContext);
     initializeAppLanguage();
 
+    const scheme = useColorScheme();
+
     return (
-        <NavigationContainer>
-            <LocalizationProvider>
-                <Stack.Navigator initialRouteName="Home">
-                    <Stack.Screen
-                        name="Home"
-                        component={HomeScreen}
-                        options={() => ({
-                            headerTitle: translations['homeScreen'],
-                            headerStyle: {
-                                backgroundColor: '#119ff7',
-                            },
-                            headerTintColor: '#fff',
-                            headerTitleStyle: {
-                                fontWeight: 'bold',
-                            },
-                        })}/>
-                    <Stack.Screen
-                        name="AddTask"
-                        component={AddTaskScreen}
-                        options={() => ({
-                            headerTitle: translations['addTaskScreen'],
-                            headerStyle: {
-                                backgroundColor: '#119ff7',
-                            },
-                            headerTintColor: '#fff',
-                            headerTitleStyle: {
-                                fontWeight: 'bold',
-                            },
-                        })}
-                    />
-                    <Stack.Screen name="Details" component={TaskDetailsScreen} options={() => ({
-                        headerTitle: translations['detailsScreen'],
-                        headerStyle: {
-                            backgroundColor: '#119ff7',
-                        },
-                        headerTintColor: '#fff',
-                        headerTitleStyle: {
-                            fontWeight: 'bold',
-                        },
-                    })}
-                    />
-                    <Stack.Screen name="Settings" component={SettingsScreen} options={() => ({
-                        headerTitle: translations['settingsScreen'],
-                        headerStyle: {
-                            backgroundColor: '#119ff7',
-                        },
-                        headerTintColor: '#fff',
-                        headerTitleStyle: {
-                            fontWeight: 'bold',
-                        },
-                    })}
-                    />
-                    <Stack.Screen name="SettingsLanguage" component={SettingsLanguageScreen} options={() => ({
-                        headerTitle: translations['languageSetting'],
-                        headerStyle: {
-                            backgroundColor: '#119ff7',
-                        },
-                        headerTintColor: '#fff',
-                        headerTitleStyle: {
-                            fontWeight: 'bold',
-                        },
-                    })}
-                    />
-                </Stack.Navigator>
-            </LocalizationProvider>
-        </NavigationContainer>
+        <AppearanceProvider>
+            <ThemeProvider>
+                <NavigationContainer theme={scheme === "dark" ? DarkTheme : DefaultTheme}>
+                    <LocalizationProvider>
+                        <Stack.Navigator initialRouteName="Home">
+                            <Stack.Screen
+                                name="Home"
+                                component={HomeScreen}
+                                options={() => ({
+                                    headerTitle: translations['homeScreen'],
+                                    headerStyle: {
+                                        backgroundColor: '#119ff7',
+                                    },
+                                    headerTintColor: '#fff',
+                                    headerTitleStyle: {
+                                        fontWeight: 'bold',
+                                    },
+                                })}/>
+                            <Stack.Screen
+                                name="AddTask"
+                                component={AddTaskScreen}
+                                options={() => ({
+                                    headerTitle: translations['addTaskScreen'],
+                                    headerStyle: {
+                                        backgroundColor: '#119ff7',
+                                    },
+                                    headerTintColor: '#fff',
+                                    headerTitleStyle: {
+                                        fontWeight: 'bold',
+                                    },
+                                })}
+                            />
+                            <Stack.Screen name="Details" component={TaskDetailsScreen} options={() => ({
+                                headerTitle: translations['detailsScreen'],
+                                headerStyle: {
+                                    backgroundColor: '#119ff7',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            })}
+                            />
+                            <Stack.Screen name="Settings" component={SettingsScreen} options={() => ({
+                                headerTitle: translations['settingsScreen'],
+                                headerStyle: {
+                                    backgroundColor: '#119ff7',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            })}
+                            />
+                            <Stack.Screen name="SettingsLanguage" component={SettingsLanguageScreen} options={() => ({
+                                headerTitle: translations['languageSetting'],
+                                headerStyle: {
+                                    backgroundColor: '#119ff7',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            })}
+                            />
+                        </Stack.Navigator>
+                    </LocalizationProvider>
+                </NavigationContainer>
+            </ThemeProvider>
+        </AppearanceProvider>
     );
 };
 
