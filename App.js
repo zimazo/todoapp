@@ -20,6 +20,8 @@ const App = () => {
 
     const scheme = useColorScheme();
 
+    console.disableYellowBox = true;
+
     return (
         <AppearanceProvider>
             <ThemeProvider>

@@ -54,6 +54,8 @@ export function SettingsScreen({navigation}) {
                             // thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
                             // ios_backgroundColor="#3e3e3e"
                             onValueChange={toggleScheme}
+                            trackColor={{ false: "#767577", true: "rgba(17,159,247,0.47)" }}
+                            thumbColor={isDark ? "#119ff7" : "#f4f3f4"}
                             value={isDark}
                         />
                     </View>

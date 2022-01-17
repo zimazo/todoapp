@@ -24,11 +24,11 @@ export function HomeScreen({ navigation }) {
         navigation.setOptions({
             headerRight: () => (
                 <View style={{flexDirection:"row" }}>
-                    <TouchableOpacity onPress={() => deleteAllCompletedAlert()}>
-                        <View style={{ alignItems: 'center', padding: 7, marginRight:5}}>
-                            <Icon name="trash" size={25} color='#f4511e'/>
-                        </View>
-                    </TouchableOpacity>
+                    {/*<TouchableOpacity onPress={() => deleteAllCompletedAlert()}>*/}
+                    {/*    <View style={{ alignItems: 'center', padding: 7, marginRight:5}}>*/}
+                    {/*        <Icon name="trash" size={25} color='#f4511e'/>*/}
+                    {/*    </View>*/}
+                    {/*</TouchableOpacity>*/}
                     <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
                         <View style={{ alignItems: 'center', padding: 7, marginRight:-10}}>
                             <Icon name="cog" size={25} color='white'/>
@@ -184,24 +184,30 @@ export function HomeScreen({ navigation }) {
                     extraData={refresh}
                 />
                 <View style={{position: 'absolute', left: 0, right: 0, bottom: -10, alignItems: 'center'}}>
-                    <TouchableOpacity
-                        style={styles.btn}
-                        onPress={() => navigation.navigate('AddTask')}>
-                        <Icon style={{color: "white"}} name="plus" size={32} />
-                    </TouchableOpacity>
+                    {showCompleted ?
+                        (<TouchableOpacity style={[styles.btn, {backgroundColor: "red"}]} onPress={() => deleteAllCompletedAlert()}>
+                            <Icon name="trash" size={25} color='white'/>
+                        </TouchableOpacity>) :
+                        <TouchableOpacity
+                            style={styles.btn}
+                            onPress={() => navigation.navigate('AddTask')}>
+                            <Icon style={{color: "white"}} name="plus" size={32} />
+                        </TouchableOpacity>}
+
+
                 </View>
             </View>
             <View style={{flex: 1, flexDirection: "row", justifyContent: "space-evenly"}}>
                 <TouchableOpacity style={showCompleted ? [styles.buttonHomeBottom, {backgroundColor: colors.background}] : styles.buttonHomeBottomSelected} onPress={() => {console.log('before set: ' + refresh); setShowCompleted(false); update(); setItems(items) ; console.log('after set: ' + refresh);}}>
                     <View style={{justifyContent: 'space-between', alignItems: 'center', padding: 7, marginRight:10}}>
-                        <Icon name="list" size={25} color={showCompleted ? '#ffffff' : (isDark ? '#ffffff' : '#1c1b1b')}/>
+                        <Icon name="list" size={25} color={showCompleted ? (isDark ? '#ffffff' : '#1c1b1b') : '#ffffff'}/>
                         <Text style={showCompleted ? [styles.buttonText, {color: colors.text}] : styles.buttonTextSelected}>{translations['toDo']}</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity style={showCompleted ? styles.buttonHomeBottomSelected : [styles.buttonHomeBottom, {backgroundColor: colors.background}]} onPress={() => {console.log('before set: ' + refresh); setShowCompleted(true); update(); setItems(items) ; console.log('after set: ' + refresh);}}>
                     <View style={{justifyContent: 'space-between', alignItems: 'center', padding: 7, marginRight:10}}>
                         <Icon name="check" size={25} color={showCompleted ? '#ffffff' : (isDark ? '#ffffff' : '#1c1b1b')}/>
-                        <Text style={showCompleted ? [styles.buttonText, {color: colors.text}] : styles.buttonTextSelected}>{translations['completed']}</Text>
+                        <Text style={showCompleted ? styles.buttonTextSelected : [styles.buttonText, {color: colors.text}]}>{translations['completed']}</Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -320,8 +326,8 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         // borderWidth:1,
         // borderColor:"blue",
-        width: 70,
-        height: 70,
+        width: 60,
+        height: 60,
         // alignSelf: "center",
         // justifyContent: "center",
         // position: "absolute",
